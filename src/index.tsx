@@ -14,19 +14,8 @@ const domNode = document.getElementById('root') as HTMLDivElement;
 const root = createRoot(domNode);
 
 const App = () => {
-	const [formState, setFormState] =
-		useState<ArticleStateType>(defaultArticleState);
-	const [tempFormState, setTempFormState] =
-		useState<ArticleStateType>(formState);
-
-	const handleSubmit = () => {
-		setFormState(tempFormState);
-	};
-
-	const handleReset = () => {
-		setTempFormState(defaultArticleState);
-		setFormState(defaultArticleState);
-	};
+	const [formState, setFormState] = useState<ArticleStateType>(defaultArticleState);
+	const [tempFormState, setTempFormState] = useState<ArticleStateType>(formState);
 
 	return (
 		<div
@@ -39,18 +28,17 @@ const App = () => {
 					'--container-width': formState.contentWidth.value,
 					'--bg-color': formState.backgroundColor.value,
 				} as React.CSSProperties
-			}>
+			}
+		>
 			<ArticleParamsForm
 				formState={tempFormState}
 				setFormState={setTempFormState}
-				onSubmit={handleSubmit}
-				onReset={handleReset}
+				setFormStateFinal={setFormState}
 			/>
 			<Article />
 		</div>
 	);
 };
-
 root.render(
 	<StrictMode>
 		<App />

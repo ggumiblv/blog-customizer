@@ -23,15 +23,13 @@ import { useOutsideClickClose } from '../select/hooks/useOutsideClickClose';
 type ArticleParamsFormProps = {
 	formState: ArticleStateType;
 	setFormState: Dispatch<SetStateAction<ArticleStateType>>;
-	onSubmit: () => void;
-	onReset: () => void;
+	setFormStateFinal: Dispatch<SetStateAction<ArticleStateType>>;
 };
 
 export const ArticleParamsForm = ({
 	formState,
 	setFormState,
-	onSubmit,
-	onReset,
+	setFormStateFinal,
 }: ArticleParamsFormProps) => {
 
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -41,7 +39,7 @@ export const ArticleParamsForm = ({
 		isOpen: isMenuOpen,
 		rootRef,
 		onClose: () => setIsMenuOpen(false),
-		onChange: () =>  setIsMenuOpen(true),
+		onChange: (newValue) => setIsMenuOpen(newValue),
 	});
 
 	const handleOptionChange = (type: keyof ArticleStateType) => (value: OptionType) => {
@@ -57,19 +55,23 @@ export const ArticleParamsForm = ({
 
 	const handleReset = (event: React.FormEvent) => {
 		event.preventDefault();
-		onReset();
+		setFormState(defaultArticleState);
+		setFormStateFinal(defaultArticleState);
 	};
 
 	const handleSubmit = (event: React.FormEvent) => {
 		event.preventDefault();
-		onSubmit();
-		toggleForm(); 
+		setFormStateFinal(formState);
+		toggleForm();
+	};
+
+	const stopPropagation = (event: React.MouseEvent) => {
+		event.stopPropagation();
 	};
 
 
 	return (
-		<>
-		<div ref={rootRef}>
+		<div ref={rootRef} onClick={stopPropagation}>
 				<ArrowButton onClick={toggleForm} isOpen={isMenuOpen} />
 				{isMenuOpen && (
 					<aside
@@ -121,6 +123,5 @@ export const ArticleParamsForm = ({
 				</aside>
 			)}
 			</div>
-		</>
 	);
 };
